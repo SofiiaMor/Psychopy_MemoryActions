@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2020.1.3),
-    on Сентябрь 18, 2020, at 12:52
+    on September 17, 2020, at 14:47
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -36,7 +36,7 @@ os.chdir(_thisDir)
 
 # Store info about the experiment session
 psychopyVersion = '2020.1.3'
-expName = '2D_scenes'  # from the Builder filename that created this script
+expName = 'MemoryActions'  # from the Builder filename that created this script
 expInfo = {'participant': '', 'session': '001'}
 dlg = gui.DlgFromDict(dictionary=expInfo, sortKeys=False, title=expName)
 if dlg.OK == False:
@@ -51,7 +51,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='C:\\работа\\PhD\\DorsalVentralStream\\MemoryActions\\MemoryActions_17.09.py',
+    originPath='D:\\psychopy\\MemoryActions\\MemoryActions_17.09_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -75,7 +75,7 @@ from psychopy.experiment.components.joyButtons import virtualJoyButtons as virtu
 
 # Setup the Window
 win = visual.Window(
-    size=[1536, 864], fullscr=True, screen=0, 
+    size=[1920, 1080], fullscr=True, screen=0, 
     winType='pyglet', allowGUI=True, allowStencil=False,
     monitor='testMonitor', color=[0.239,0.239,0.239], colorSpace='rgb',
     blendMode='avg', useFBO=True, 
@@ -638,7 +638,16 @@ for thisTrial in trials:
         x1, y1 = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() #delta between the middle of the screen and the position of joystick before the trial
         
         joystick_resp_corr = -1
-        joystick_RT_corr = [None]
+        joystick_RT_corr = 0.0
+        
+        # Sofiia 17.09.2020 -----<
+        joystick_RT_start = [None]
+        move = 0
+        NoMove_x = False
+        NoMove_y = False
+        missed_j = 0
+        #------>
+        
         image_im.setImage('Images/'+picture)
         joystick_ImmedResp.oldButtonState = joystick_ImmedResp.device.getAllButtons()[:]
         joystick_ImmedResp.activeButtons=[i for i in range(joystick_ImmedResp.numButtons)]
@@ -707,7 +716,7 @@ for thisTrial in trials:
                     win.timeOnFlip(image_im, 'tStopRefresh')  # time at next scr refresh
                     image_im.setAutoDraw(False)
             # *joystick_ImmedResp* updates
-            if joystick_ImmedResp.status == NOT_STARTED and t >= 2.0-frameTolerance:
+            if joystick_ImmedResp.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
                 # keep track of start time/frame for later
                 joystick_ImmedResp.frameNStart = frameN  # exact frame index
                 joystick_ImmedResp.tStart = t  # local t and not account for scr refresh
@@ -728,8 +737,23 @@ for thisTrial in trials:
                 joystick_ImmedResp.releasedButtons = [i for i in range(joystick_ImmedResp.numButtons) if not joystick_ImmedResp.newButtonState[i] and joystick_ImmedResp.oldButtonState[i]]
                 joystick_ImmedResp.newPressedButtons = [i for i in joystick_ImmedResp.activeButtons if i in joystick_ImmedResp.pressedButtons]
                 joystick_ImmedResp.buttons = joystick_ImmedResp.newPressedButtons
-                [logging.data("joystick_{}_button: {}, pos=({:1.4f},{:1.4f})".format(joystick_ImmedResp.device_number, i, joystick_ImmedResp.getX(), joystick_ImmedResp.getY()) for i in joystick_ImmedResp.pressedButtons]
-                x, y = joystick_ImmedResp.getX(), joystick_ImmedResp.getY()
+                #[logging.data("joystick_{}_button: {}, pos=({:1.4f},{:1.4f})".format(joystick_ImmedResp.device_number, i, joystick_ImmedResp.getX(), joystick_ImmedResp.getY()) for i in joystick_ImmedResp.pressedButtons] Sofiia 17.09.2020 , with this line the experiment doesn't work
+                #x, y = joystick_DelResp.getX(), joystick_DelResp.getY()
+                x, y = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() # Sofiia 17.09.2020 invert y direction
+                
+                # Sofia 17.09.2020 ---<
+                 # update/draw components on each frame
+                # get time when subject just starts to move joystick
+                if len(joystick_ImmedResp.x)!=0 and (x!= joystick_ImmedResp.x[-1] or y!= joystick_ImmedResp.y[-1]) and move==0:
+                    joystick_RT_start = joystick_ImmedResp.joystickClock.getTime() - 2.0
+                    move = 1
+                    
+                # compare the position of joystick with x,y coordinates of correct object each frame
+                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<=x<=(x_square+0.12) and (y_square-0.12)<=y<=(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x<(x_triangle+0.12) and (y_triangle-0.12)<y<(y_triangle+0.12)):
+                    joystick_resp_corr = 1
+                    joystick_RT_corr = joystick_ImmedResp.joystickClock.getTime()
+                # -------->
+                
                 joystick_ImmedResp.x.append(x)
                 joystick_ImmedResp.y.append(y)
                 [joystick_ImmedResp.buttonLogs[i].append(int(joystick_ImmedResp.newButtonState[i])) for i in joystick_ImmedResp.activeButtons]
@@ -752,7 +776,7 @@ for thisTrial in trials:
                     win.timeOnFlip(joystick_ImCursor, 'tStopRefresh')  # time at next scr refresh
                     joystick_ImCursor.setAutoDraw(False)
             if joystick_ImCursor.status == STARTED:  # only update if drawing
-                joystick_ImCursor.setPos([x-x1,-1*(y-y1)], log=False)
+                joystick_ImCursor.setPos([x-x1,y-y1], log=False) # Sofiia 17.09.2020 invert y direction
             # *ISI* period
             if ISI.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
                 # keep track of start time/frame for later
@@ -785,12 +809,30 @@ for thisTrial in trials:
         for thisComponent in trial_imComponents:
             if hasattr(thisComponent, "setAutoDraw"):
                 thisComponent.setAutoDraw(False)
+        
+        # Sofiia 17.09.2020 -----<
+        # check if joystick was moved at all in this trial, checking if all elements in a List joystick_ImmedResp.x and joystick_ImmedResp.y are the same
+        NoMove_x = len(joystick_ImmedResp.x) > 0 and all(elem == joystick_ImmedResp.x[0] for elem in joystick_ImmedResp.x)
+        NoMove_y = len(joystick_ImmedResp.y) > 0 and all(elem == joystick_ImmedResp.y[0] for elem in joystick_ImmedResp.y)
+        if NoMove_x and NoMove_y:
+            missed_j = 1
+        #else:
+            #i = 0
+            #while joystick_ImmedResp.x[i] == joystick_ImmedResp.x[i+1] and joystick_ImmedResp.y[i] == joystick_ImmedResp.y[i+1]:
+            #    i +=1
+            #nFrame_RT = i+1
+            
+            
+        
+        joystick_RT_corr = joystick_RT_corr-2.0  # calculate RT relative to the start of action phase
+        
         attempts += 1
         if joystick_resp_corr==1:
              sumScore += joystick_resp_corr;
              sumRt += joystick_RT_corr;
-        else:
-            missed = missed + 1
+        elif missed_j == 1:
+            missed += 1
+        # ----------->
             
         
         loop_im.addData('text_cross_im.started', text_cross_im.tStartRefresh)
@@ -798,12 +840,21 @@ for thisTrial in trials:
         loop_im.addData('image_im.started', image_im.tStartRefresh)
         loop_im.addData('image_im.stopped', image_im.tStopRefresh)
         # store data for loop_im (TrialHandler)
+        
+           # Sofia 17.09.2020 --------<
+        loop_im.addData('x1_immed', x1)
+        loop_im.addData('y1_immed', y1)
+        loop_im.addData('joystick_resp_corr_immed', joystick_resp_corr)
+        loop_im.addData('joystick_RT_corr_immed', joystick_RT_corr)
+        loop_im.addData('joystick_RT_start_immed', joystick_RT_start)
+        loop_im.addData('missed_immed', missed_j) 
+        #--- -->
         loop_im.addData('joystick_ImmedResp.x', joystick_ImmedResp.x)
         loop_im.addData('joystick_ImmedResp.y', joystick_ImmedResp.y)
         loop_im.addData('joystick_ImmedResp.time', joystick_ImmedResp.time)
         [loop_im.addData('joystick_ImmedResp.button_{0}'.format(i), joystick_ImmedResp.buttonLogs[i]) for i in joystick_ImmedResp.activeButtons if len(joystick_ImmedResp.buttonLogs[i])]
-        loop_im.addData('joystick_ImmedResp.started', joystick_ImmedResp.tStart)
-        loop_im.addData('joystick_ImmedResp.stopped', joystick_ImmedResp.tStop)
+        loop_im.addData('joystick_ImmedResp.started', joystick_ImmedResp.tStartRefresh)
+        loop_im.addData('joystick_ImmedResp.stopped', joystick_ImmedResp.tStopRefresh)
         loop_im.addData('joystick_ImCursor.started', joystick_ImCursor.tStartRefresh)
         loop_im.addData('joystick_ImCursor.stopped', joystick_ImCursor.tStopRefresh)
         loop_im.addData('ISI.started', ISI.tStartRefresh)
@@ -840,7 +891,15 @@ for thisTrial in trials:
         x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
         
         joystick_resp_corr = -1
-        joystick_RT_corr = [None]
+        joystick_RT_corr = 0.0
+        
+        # Sofiia 17.09.2020 -----<
+        joystick_RT_start = [None]
+        move = 0
+        NoMove_x = False
+        NoMove_y = False
+        missed_j = 0
+        #------>
         
         image_del.setImage('Images/'+picture)
         background.setImage('background.png')
@@ -1002,8 +1061,21 @@ for thisTrial in trials:
                 joystick_DelResp.releasedButtons = [i for i in range(joystick_DelResp.numButtons) if not joystick_DelResp.newButtonState[i] and joystick_DelResp.oldButtonState[i]]
                 joystick_DelResp.newPressedButtons = [i for i in joystick_DelResp.activeButtons if i in joystick_DelResp.pressedButtons]
                 joystick_DelResp.buttons = joystick_DelResp.newPressedButtons
-                [logging.data("joystick_{}_button: {}, pos=({:1.4f},{:1.4f})".format(joystick_DelResp.device_number, i, joystick_DelResp.getX(), joystick_DelResp.getY()) for i in joystick_DelResp.pressedButtons]
-                x, y = joystick_DelResp.getX(), joystick_DelResp.getY()
+                #[logging.data("joystick_{}_button: {}, pos=({:1.4f},{:1.4f})".format(joystick_DelResp.device_number, i, joystick_DelResp.getX(), joystick_DelResp.getY()) for i in joystick_DelResp.pressedButtons] Sofiia 17.09.2020 , with this line the experiment doesn't work
+                #x, y = joystick_DelResp.getX(), joystick_DelResp.getY()
+                x, y = joystick_DelResp.getX(), -1*joystick_DelResp.getY() # Sofiia 17.09.2020 invert y direction
+                
+                # Sofia 17.09.2020 ---<
+                 # update/draw components on each frame
+                  # get time when subject just starts to move joystick
+                if len(joystick_DelResp.x) != 0 and (x!= joystick_DelResp.x[-1] or y!= joystick_DelResp.y[-1]) and move==0:
+                    joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 12.0
+                    move = 1 
+                # compare the position of joystick with x,y coordinates of correct object each frame
+                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<=x<=(x_square+0.12) and (y_square-0.12)<=y<=(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x<(x_triangle+0.12) and (y_triangle-0.12)<y<(y_triangle+0.12)):
+                    joystick_resp_corr = 1
+                    joystick_RT_corr = joystick_DelResp.joystickClock.getTime()
+                # -------->
                 joystick_DelResp.x.append(x)
                 joystick_DelResp.y.append(y)
                 [joystick_DelResp.buttonLogs[i].append(int(joystick_DelResp.newButtonState[i])) for i in joystick_DelResp.activeButtons]
@@ -1026,7 +1098,7 @@ for thisTrial in trials:
                     win.timeOnFlip(joystick_DelCursor, 'tStopRefresh')  # time at next scr refresh
                     joystick_DelCursor.setAutoDraw(False)
             if joystick_DelCursor.status == STARTED:  # only update if drawing
-                joystick_DelCursor.setPos([x-x1,-1*(y-y1)], log=False)
+                joystick_DelCursor.setPos([x-x1,y-y1], log=False) # Sofiia 17.09.2020 invert y direction
             # *ISI_2* period
             if ISI_2.status == NOT_STARTED and tThisFlip >= 5.0-frameTolerance:
                 # keep track of start time/frame for later
@@ -1059,15 +1131,24 @@ for thisTrial in trials:
         for thisComponent in trial_delComponents:
             if hasattr(thisComponent, "setAutoDraw"):
                 thisComponent.setAutoDraw(False)
+                
+        # Sofiia 17.09.2020 -----<
+        # check if joystick was moved at all in this trial, checking if all elements in a List joystick_ImmedResp.x and joystick_ImmedResp.y are the same
+        NoMove_x = len(joystick_DelResp.x) > 0 and all(elem == joystick_DelResp.x[0] for elem in joystick_DelResp.x)
+        NoMove_y = len(joystick_DelResp.y) > 0 and all(elem == joystick_DelResp.y[0] for elem in joystick_DelResp.y)
+        if NoMove_x and NoMove_y:
+            missed_j = 1
+            
+        joystick_RT_corr = joystick_RT_corr-12.0  # calculate RT relative to the start of action phase
         
         attempts += 1
         if joystick_resp_corr==1:
              sumScore += joystick_resp_corr;
-             sumRt += joystick_RT;
-        else:
-            missed = missed + 1
-            
-        
+             sumRt += joystick_RT_corr;
+        elif missed_j == 1:
+            missed += 1
+        # ----------->
+                      
         loop_del.addData('cross_ITI.started', cross_ITI.tStartRefresh)
         loop_del.addData('cross_ITI.stopped', cross_ITI.tStopRefresh)
         loop_del.addData('image_del.started', image_del.tStartRefresh)
@@ -1083,6 +1164,15 @@ for thisTrial in trials:
         loop_del.addData('background.started', background.tStartRefresh)
         loop_del.addData('background.stopped', background.tStopRefresh)
         # store data for loop_del (TrialHandler)
+                # Sofia 17.09.2020 --------<
+        loop_del.addData('x1_del', x1)
+        loop_del.addData('y1_del', y1)
+        loop_del.addData('joystick_resp_corr_del', joystick_resp_corr)
+        loop_del.addData('joystick_RT_corr_del', joystick_RT_corr)
+        loop_del.addData('joystick_RT_start_del', joystick_RT_start)
+        loop_del.addData('missed_del', missed_j)
+        #--- -->
+        
         loop_del.addData('joystick_DelResp.x', joystick_DelResp.x)
         loop_del.addData('joystick_DelResp.y', joystick_DelResp.y)
         loop_del.addData('joystick_DelResp.time', joystick_DelResp.time)
