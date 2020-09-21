@@ -484,9 +484,9 @@ for thisTrial in trials:
         continueRoutine = True
         # update component parameters for each repeat
         if immed==1:
-            textInstr = 'make a movement by joystick from the cross to the closest object now'
+            textInstr = 'move a joystick from the cross to the closest object now'
         else:
-            textInstr = 'rememeber which object is closer to the cross; when a word-signal appears, make a joystick movement to its suggested location'
+            textInstr = 'remember which object is closer to the cross; when you see a signal (word "go"), move a joystick to the supposed location of that object'
         text_instr1.setText(textInstr)
         text_3.setText(block)
         button_InstrResp.oldButtonState = button_InstrResp.device.getAllButtons()[:]
@@ -749,7 +749,8 @@ for thisTrial in trials:
                     move = 1
                     
                 # compare the position of joystick with x,y coordinates of correct object each frame
-                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<=x<=(x_square+0.12) and (y_square-0.12)<=y<=(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x<(x_triangle+0.12) and (y_triangle-0.12)<y<(y_triangle+0.12)):
+                #if joystick_resp_corr<0 and (correct_object== 'square' and (float(x_square)-0.12)<x-x1<(float(x_square)+0.12) and (float(y_square)-0.12)<y-y1<(float(y_square)+0.12)) or (correct_object== 'triangle' and (float(x_triangle)-0.12)<x-x1<(float(x_triangle)+0.12) and (float(y_triangle)-0.12)<y-y1<(float(y_triangle)+0.12)):
+                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<x-x1<(x_square+0.12) and (y_square-0.12)<y-y1<(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x-x1<(x_triangle+0.12) and (y_triangle-0.12)<y-y1<(y_triangle+0.12)):
                     joystick_resp_corr = 1
                     joystick_RT_corr = joystick_ImmedResp.joystickClock.getTime()
                 # -------->
@@ -1072,7 +1073,7 @@ for thisTrial in trials:
                     joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 12.0
                     move = 1 
                 # compare the position of joystick with x,y coordinates of correct object each frame
-                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<=x<=(x_square+0.12) and (y_square-0.12)<=y<=(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x<(x_triangle+0.12) and (y_triangle-0.12)<y<(y_triangle+0.12)):
+                if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<x-x1<(x_square+0.12) and (y_square-0.12)<y-y1<(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x-x1<(x_triangle+0.12) and (y_triangle-0.12)<y-y1<(y_triangle+0.12)):
                     joystick_resp_corr = 1
                     joystick_RT_corr = joystick_DelResp.joystickClock.getTime()
                 # -------->
