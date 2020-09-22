@@ -635,7 +635,7 @@ for thisTrial in trials:
         routineTimer.add(4.000000)
         # update component parameters for each repeat
         x1, y1 = [None, None]  
-        x1, y1 = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+        #x1, y1 = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() #delta between the middle of the screen and the position of joystick before the trial
         
         joystick_resp_corr = -1
         joystick_RT_corr = 0.0
@@ -698,7 +698,7 @@ for thisTrial in trials:
                     text_cross_im.frameNStop = frameN  # exact frame index
                     win.timeOnFlip(text_cross_im, 'tStopRefresh')  # time at next scr refresh
                     text_cross_im.setAutoDraw(False)
-            
+                x1, y1 = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() #delta between the middle of the screen and the position of joystick before the trial
             # *image_im* updates
             if image_im.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
                 # keep track of start time/frame for later
@@ -889,7 +889,7 @@ for thisTrial in trials:
         routineTimer.add(14.000000)
         # update component parameters for each repeat
         x1, y1 = [None, None]  
-        x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+        #x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
         
         joystick_resp_corr = -1
         joystick_RT_corr = 0.0
@@ -1006,7 +1006,7 @@ for thisTrial in trials:
                     text_cross_delay.frameNStop = frameN  # exact frame index
                     win.timeOnFlip(text_cross_delay, 'tStopRefresh')  # time at next scr refresh
                     text_cross_delay.setAutoDraw(False)
-            
+                x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
             # *signal* updates
             if signal.status == NOT_STARTED and tThisFlip >= 11.5-frameTolerance:
                 # keep track of start time/frame for later
