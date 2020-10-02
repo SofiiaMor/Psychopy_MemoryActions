@@ -1,3 +1,4 @@
+# last version from 02.10.2020 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -208,7 +209,7 @@ joystick_ImCursor = visual.TextStim(win=win, name='joystick_ImCursor',
     text='+',
     font='Arial',
     pos=[0,0], height=0.1, wrapWidth=None, ori=0, 
-    color='red', colorSpace='rgb', opacity=1, 
+    color= 'green', colorSpace='rgb', opacity=1, 
     languageStyle='LTR',
     depth=-4.0);
 ISI = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='ISI')
@@ -303,7 +304,7 @@ joystick_DelCursor = visual.TextStim(win=win, name='joystick_DelCursor',
     text='+',
     font='Arial',
     pos=[0,0], height=0.1, wrapWidth=None, ori=0, 
-    color='red', colorSpace='rgb', opacity=1, 
+    color= 'green', colorSpace='rgb', opacity=1, 
     languageStyle='LTR',
     depth=-9.0);
 
@@ -692,7 +693,7 @@ for thisTrial in trials:
                 text_cross_im.setAutoDraw(True)
             if text_cross_im.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > text_cross_im.tStartRefresh + 2.0-frameTolerance:
+                if tThisFlipGlobal > text_cross_im.tStartRefresh + 1.0-frameTolerance:   # Sofiia 2.10.2020 change time of ITI in immed trials
                     # keep track of stop time/frame for later
                     text_cross_im.tStop = t  # not accounting for scr refresh
                     text_cross_im.frameNStop = frameN  # exact frame index
@@ -700,7 +701,7 @@ for thisTrial in trials:
                     text_cross_im.setAutoDraw(False)
                 x1, y1 = joystick_ImmedResp.getX(), -1*joystick_ImmedResp.getY() #delta between the middle of the screen and the position of joystick before the trial
             # *image_im* updates
-            if image_im.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
+            if image_im.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 image_im.frameNStart = frameN  # exact frame index
                 image_im.tStart = t  # local t and not account for scr refresh
@@ -716,7 +717,7 @@ for thisTrial in trials:
                     win.timeOnFlip(image_im, 'tStopRefresh')  # time at next scr refresh
                     image_im.setAutoDraw(False)
             # *joystick_ImmedResp* updates
-            if joystick_ImmedResp.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
+            if joystick_ImmedResp.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 joystick_ImmedResp.frameNStart = frameN  # exact frame index
                 joystick_ImmedResp.tStart = t  # local t and not account for scr refresh
@@ -745,7 +746,7 @@ for thisTrial in trials:
                  # update/draw components on each frame
                 # get time when subject just starts to move joystick
                 if len(joystick_ImmedResp.x)!=0 and (x!= joystick_ImmedResp.x[-1] or y!= joystick_ImmedResp.y[-1]) and move==0:
-                    joystick_RT_start = joystick_ImmedResp.joystickClock.getTime() - 2.0
+                    joystick_RT_start = joystick_ImmedResp.joystickClock.getTime() - 1.0  # Sofiia 2.10.2020 change time
                     move = 1
                     
                 # compare the position of joystick with x,y coordinates of correct object each frame
@@ -761,7 +762,7 @@ for thisTrial in trials:
                 joystick_ImmedResp.time.append(joystick_ImmedResp.joystickClock.getTime())
             
             # *joystick_ImCursor* updates
-            if joystick_ImCursor.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
+            if joystick_ImCursor.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 joystick_ImCursor.frameNStart = frameN  # exact frame index
                 joystick_ImCursor.tStart = t  # local t and not account for scr refresh
@@ -779,7 +780,7 @@ for thisTrial in trials:
             if joystick_ImCursor.status == STARTED:  # only update if drawing
                 joystick_ImCursor.setPos([x-x1,y-y1], log=False) # Sofiia 17.09.2020 invert y direction
             # *ISI* period
-            if ISI.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance:
+            if ISI.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance: # Sofiia 2.10.2020 change from 2.0 to 1.0 sec
                 # keep track of start time/frame for later
                 ISI.frameNStart = frameN  # exact frame index
                 ISI.tStart = t  # local t and not account for scr refresh
@@ -825,7 +826,7 @@ for thisTrial in trials:
             
             
         
-        joystick_RT_corr = joystick_RT_corr-2.0  # calculate RT relative to the start of action phase
+        joystick_RT_corr = joystick_RT_corr-1.0  # calculate RT relative to the start of action phase # Sofiia 2.10.2020 change time
         
         attempts += 1
         if joystick_resp_corr==1:
@@ -890,6 +891,7 @@ for thisTrial in trials:
         # update component parameters for each repeat
         x1, y1 = [None, None]  
         #x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+        delta = 0
         
         joystick_resp_corr = -1
         joystick_RT_corr = 0.0
@@ -947,7 +949,7 @@ for thisTrial in trials:
                 cross_ITI.setAutoDraw(True)
             if cross_ITI.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > cross_ITI.tStartRefresh + 5.0-frameTolerance:
+                if tThisFlipGlobal > cross_ITI.tStartRefresh + 2.0-frameTolerance:  # Sofiia 2.10.2020 change time of ITI in del trials
                     # keep track of stop time/frame for later
                     cross_ITI.tStop = t  # not accounting for scr refresh
                     cross_ITI.frameNStop = frameN  # exact frame index
@@ -955,7 +957,7 @@ for thisTrial in trials:
                     cross_ITI.setAutoDraw(False)
             
             # *image_del* updates
-            if image_del.status == NOT_STARTED and tThisFlip >= 5.0-frameTolerance:
+            if image_del.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 image_del.frameNStart = frameN  # exact frame index
                 image_del.tStart = t  # local t and not account for scr refresh
@@ -972,7 +974,7 @@ for thisTrial in trials:
                     image_del.setAutoDraw(False)
             
             # *j_cursor_encod* updates
-            if j_cursor_encod.status == NOT_STARTED and tThisFlip >= 5.0-frameTolerance:
+            if j_cursor_encod.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 j_cursor_encod.frameNStart = frameN  # exact frame index
                 j_cursor_encod.tStart = t  # local t and not account for scr refresh
@@ -991,7 +993,7 @@ for thisTrial in trials:
                 j_cursor_encod.setPos([0,0], log=False)
             
             # *text_cross_delay* updates
-            if text_cross_delay.status == NOT_STARTED and tThisFlip >= 7.0-frameTolerance:
+            if text_cross_delay.status == NOT_STARTED and tThisFlip >= 4.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 text_cross_delay.frameNStart = frameN  # exact frame index
                 text_cross_delay.tStart = t  # local t and not account for scr refresh
@@ -1000,15 +1002,19 @@ for thisTrial in trials:
                 text_cross_delay.setAutoDraw(True)
             if text_cross_delay.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
+                #if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
+                 #   x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+                 #   delta = 1
                 if tThisFlipGlobal > text_cross_delay.tStartRefresh + 5.0-frameTolerance:
                     # keep track of stop time/frame for later
                     text_cross_delay.tStop = t  # not accounting for scr refresh
                     text_cross_delay.frameNStop = frameN  # exact frame index
                     win.timeOnFlip(text_cross_delay, 'tStopRefresh')  # time at next scr refresh
                     text_cross_delay.setAutoDraw(False)
-                x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+                if x1==[None] or y1==[None]:  # Sofiia 2.10.2020 try to avoid 'ghosts'
+                    x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
             # *signal* updates
-            if signal.status == NOT_STARTED and tThisFlip >= 11.5-frameTolerance:
+            if signal.status == NOT_STARTED and tThisFlip >= 8.5-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 signal.frameNStart = frameN  # exact frame index
                 signal.tStart = t  # local t and not account for scr refresh
@@ -1016,6 +1022,9 @@ for thisTrial in trials:
                 win.timeOnFlip(signal, 'tStartRefresh')  # time at next scr refresh
                 signal.setAutoDraw(True)
             if signal.status == STARTED:
+                if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
+                    x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+                    delta = 1
                 # is it time to stop? (based on global clock, using actual start)
                 if tThisFlipGlobal > signal.tStartRefresh + 0.5-frameTolerance:
                     # keep track of stop time/frame for later
@@ -1025,7 +1034,7 @@ for thisTrial in trials:
                     signal.setAutoDraw(False)
             
             # *background* updates
-            if background.status == NOT_STARTED and tThisFlip >= 12.0-frameTolerance:
+            if background.status == NOT_STARTED and tThisFlip >= 9.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 background.frameNStart = frameN  # exact frame index
                 background.tStart = t  # local t and not account for scr refresh
@@ -1041,7 +1050,7 @@ for thisTrial in trials:
                     win.timeOnFlip(background, 'tStopRefresh')  # time at next scr refresh
                     background.setAutoDraw(False)
             # *joystick_DelResp* updates
-            if joystick_DelResp.status == NOT_STARTED and t >= 12.0-frameTolerance:
+            if joystick_DelResp.status == NOT_STARTED and t >= 9.0-frameTolerance:  # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 joystick_DelResp.frameNStart = frameN  # exact frame index
                 joystick_DelResp.tStart = t  # local t and not account for scr refresh
@@ -1070,7 +1079,7 @@ for thisTrial in trials:
                  # update/draw components on each frame
                   # get time when subject just starts to move joystick
                 if len(joystick_DelResp.x) != 0 and (x!= joystick_DelResp.x[-1] or y!= joystick_DelResp.y[-1]) and move==0:
-                    joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 12.0
+                    joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 8.5  # Sofiia 2.10.2020 change time
                     move = 1 
                 # compare the position of joystick with x,y coordinates of correct object each frame
                 if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<x-x1<(x_square+0.12) and (y_square-0.12)<y-y1<(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x-x1<(x_triangle+0.12) and (y_triangle-0.12)<y-y1<(y_triangle+0.12)):
@@ -1083,7 +1092,7 @@ for thisTrial in trials:
                 joystick_DelResp.time.append(joystick_DelResp.joystickClock.getTime())
             
             # *joystick_DelCursor* updates
-            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 12.0-frameTolerance:
+            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 9.0-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
                 joystick_DelCursor.frameNStart = frameN  # exact frame index
                 joystick_DelCursor.tStart = t  # local t and not account for scr refresh
@@ -1101,7 +1110,7 @@ for thisTrial in trials:
             if joystick_DelCursor.status == STARTED:  # only update if drawing
                 joystick_DelCursor.setPos([x-x1,y-y1], log=False) # Sofiia 17.09.2020 invert y direction
             # *ISI_2* period
-            if ISI_2.status == NOT_STARTED and tThisFlip >= 5.0-frameTolerance:
+            if ISI_2.status == NOT_STARTED and tThisFlip >= 2.0-frameTolerance: # Sofiia 2.10.2020 change from 5.0 to 2.0 sec
                 # keep track of start time/frame for later
                 ISI_2.frameNStart = frameN  # exact frame index
                 ISI_2.tStart = t  # local t and not account for scr refresh
@@ -1140,7 +1149,7 @@ for thisTrial in trials:
         if NoMove_x and NoMove_y:
             missed_j = 1
             
-        joystick_RT_corr = joystick_RT_corr-12.0  # calculate RT relative to the start of action phase
+        joystick_RT_corr = joystick_RT_corr-8.5  # calculate RT relative to the start of action phase  # Sofiia 2.10.2020 change - RT relative to the start of go signal
         
         attempts += 1
         if joystick_resp_corr==1:
