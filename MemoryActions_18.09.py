@@ -1,4 +1,4 @@
-# last version from 02.10.2020 
+# last version from 29.10.2020 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -1002,17 +1002,14 @@ for thisTrial in trials:
                 text_cross_delay.setAutoDraw(True)
             if text_cross_delay.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                #if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
-                 #   x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
-                 #   delta = 1
                 if tThisFlipGlobal > text_cross_delay.tStartRefresh + 5.0-frameTolerance:
                     # keep track of stop time/frame for later
                     text_cross_delay.tStop = t  # not accounting for scr refresh
                     text_cross_delay.frameNStop = frameN  # exact frame index
                     win.timeOnFlip(text_cross_delay, 'tStopRefresh')  # time at next scr refresh
                     text_cross_delay.setAutoDraw(False)
-                if x1==[None] or y1==[None]:  # Sofiia 2.10.2020 try to avoid 'ghosts'
-                    x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+                 # Sofiia 2.10.2020 try to avoid 'ghosts'
+                x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
             # *signal* updates
             if signal.status == NOT_STARTED and tThisFlip >= 8.5-frameTolerance: # Sofiia 2.10.2020 change time
                 # keep track of start time/frame for later
@@ -1022,9 +1019,9 @@ for thisTrial in trials:
                 win.timeOnFlip(signal, 'tStartRefresh')  # time at next scr refresh
                 signal.setAutoDraw(True)
             if signal.status == STARTED:
-                if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
-                    x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
-                    delta = 1
+                #if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
+                  #  x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
+                  #  delta = 1
                 # is it time to stop? (based on global clock, using actual start)
                 if tThisFlipGlobal > signal.tStartRefresh + 0.5-frameTolerance:
                     # keep track of stop time/frame for later
@@ -1092,7 +1089,7 @@ for thisTrial in trials:
                 joystick_DelResp.time.append(joystick_DelResp.joystickClock.getTime())
             
             # *joystick_DelCursor* updates
-            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 9.0-frameTolerance: # Sofiia 2.10.2020 change time
+            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 9.02-frameTolerance: # Sofiia 2.10.2020 change time   # Sofiia 29.10.2020 avoiding 'ghosts', addindg 2 ms to cursor
                 # keep track of start time/frame for later
                 joystick_DelCursor.frameNStart = frameN  # exact frame index
                 joystick_DelCursor.tStart = t  # local t and not account for scr refresh
