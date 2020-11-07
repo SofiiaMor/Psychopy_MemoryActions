@@ -1,4 +1,4 @@
-# last version from 29.10.2020 
+# last version from 07.11.2020 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -97,6 +97,8 @@ attempts = 0
 sumScore = 0
 missed = 0
 sumRt = 0
+answScore = 0   # Sofiia 06.11.2020 initialize variable for counting correct answers on the question about objects
+
 textInstr = ''
 text_instr1 = visual.TextStim(win=win, name='text_instr1',
     text='default text',
@@ -246,21 +248,22 @@ text_cross_delay = visual.TextStim(win=win, name='text_cross_delay',
     languageStyle='LTR',
     depth=-4.0);
 ISI_2 = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='ISI_2')
+background = visual.ImageStim(
+    win=win,
+    name='background', 
+    #image='sin', mask=None,
+    image='background.png', mask=None,
+    ori=0, pos=(0, 0), size=None,
+    color=[1,1,1], colorSpace='rgb', opacity=1,
+    flipHoriz=False, flipVert=False,
+    texRes=128, interpolate=True, depth=-6.0)   # Sofiia 07.11.2020 change depth (order of background and signal)
 signal = visual.TextStim(win=win, name='signal',
     text='go',
     font='Arial',
     pos=(0, 0.3), height=0.1, wrapWidth=None, ori=0, 
-    color='red', colorSpace='rgb', opacity=1, 
+    color='green', colorSpace='rgb', opacity=1, 
     languageStyle='LTR',
-    depth=-6.0);
-background = visual.ImageStim(
-    win=win,
-    name='background', 
-    image='sin', mask=None,
-    ori=0, pos=(0, 0), size=None,
-    color=[1,1,1], colorSpace='rgb', opacity=1,
-    flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=-7.0)
+    depth=-7.0);    # Sofiia 07.11.2020 change depth 
 x, y = [None, None]
 joystick_DelResp = type('', (), {})() # Create an object to use as a name space
 joystick_DelResp.device = None
@@ -891,8 +894,6 @@ for thisTrial in trials:
         # update component parameters for each repeat
         x1, y1 = [None, None]  
         #x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
-        delta = 0
-        
         joystick_resp_corr = -1
         joystick_RT_corr = 0.0
         
@@ -905,7 +906,7 @@ for thisTrial in trials:
         #------>
         
         image_del.setImage('Images/'+picture)
-        background.setImage('background.png')
+        #background.setImage('background.png')
         joystick_DelResp.oldButtonState = joystick_DelResp.device.getAllButtons()[:]
         joystick_DelResp.activeButtons=[i for i in range(joystick_DelResp.numButtons)]
         # setup some python lists for storing info about the joystick_DelResp
@@ -1002,7 +1003,7 @@ for thisTrial in trials:
                 text_cross_delay.setAutoDraw(True)
             if text_cross_delay.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > text_cross_delay.tStartRefresh + 5.0-frameTolerance:
+                if tThisFlipGlobal > text_cross_delay.tStartRefresh + 4.0-frameTolerance:   # Sofiia 07.11.2020 change time of delay 
                     # keep track of stop time/frame for later
                     text_cross_delay.tStop = t  # not accounting for scr refresh
                     text_cross_delay.frameNStop = frameN  # exact frame index
@@ -1010,28 +1011,9 @@ for thisTrial in trials:
                     text_cross_delay.setAutoDraw(False)
                  # Sofiia 2.10.2020 try to avoid 'ghosts'
                 x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
-            # *signal* updates
-            if signal.status == NOT_STARTED and tThisFlip >= 8.5-frameTolerance: # Sofiia 2.10.2020 change time
-                # keep track of start time/frame for later
-                signal.frameNStart = frameN  # exact frame index
-                signal.tStart = t  # local t and not account for scr refresh
-                signal.tStartRefresh = tThisFlipGlobal  # on global time
-                win.timeOnFlip(signal, 'tStartRefresh')  # time at next scr refresh
-                signal.setAutoDraw(True)
-            if signal.status == STARTED:
-                #if delta == 0:  # Sofiia 2.10.2020 try to avoid 'ghosts'
-                  #  x1, y1 = joystick_DelResp.getX(), -1*joystick_DelResp.getY() #delta between the middle of the screen and the position of joystick before the trial
-                  #  delta = 1
-                # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > signal.tStartRefresh + 0.5-frameTolerance:
-                    # keep track of stop time/frame for later
-                    signal.tStop = t  # not accounting for scr refresh
-                    signal.frameNStop = frameN  # exact frame index
-                    win.timeOnFlip(signal, 'tStopRefresh')  # time at next scr refresh
-                    signal.setAutoDraw(False)
-            
+
             # *background* updates
-            if background.status == NOT_STARTED and tThisFlip >= 9.0-frameTolerance: # Sofiia 2.10.2020 change time
+            if background.status == NOT_STARTED and tThisFlip >= 8.0-frameTolerance: # Sofiia 07.11.2020 change time of delay 
                 # keep track of start time/frame for later
                 background.frameNStart = frameN  # exact frame index
                 background.tStart = t  # local t and not account for scr refresh
@@ -1046,8 +1028,25 @@ for thisTrial in trials:
                     background.frameNStop = frameN  # exact frame index
                     win.timeOnFlip(background, 'tStopRefresh')  # time at next scr refresh
                     background.setAutoDraw(False)
+            # *signal* updates
+            if signal.status == NOT_STARTED and tThisFlip >= 8.0-frameTolerance:    # Sofiia 06.11.2020 synchronizing 'go' signal, background and green cross
+                # keep track of start time/frame for later
+                signal.frameNStart = frameN  # exact frame index
+                signal.tStart = t  # local t and not account for scr refresh
+                signal.tStartRefresh = tThisFlipGlobal  # on global time
+                win.timeOnFlip(signal, 'tStartRefresh')  # time at next scr refresh
+                signal.setAutoDraw(True)
+            if signal.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > signal.tStartRefresh + 0.5-frameTolerance:
+                    # keep track of stop time/frame for later
+                    signal.tStop = t  # not accounting for scr refresh
+                    signal.frameNStop = frameN  # exact frame index
+                    win.timeOnFlip(signal, 'tStopRefresh')  # time at next scr refresh
+                    signal.setAutoDraw(False)
+            
             # *joystick_DelResp* updates
-            if joystick_DelResp.status == NOT_STARTED and t >= 9.0-frameTolerance:  # Sofiia 2.10.2020 change time
+            if joystick_DelResp.status == NOT_STARTED and t >= 7.98-frameTolerance:  # Sofiia 29.10.2020 avoiding 'ghosts', addindg 2 ms before updating cursor
                 # keep track of start time/frame for later
                 joystick_DelResp.frameNStart = frameN  # exact frame index
                 joystick_DelResp.tStart = t  # local t and not account for scr refresh
@@ -1056,7 +1055,7 @@ for thisTrial in trials:
                 joystick_DelResp.status = STARTED
             if joystick_DelResp.status == STARTED:
                 # is it time to stop? (based on global clock, using actual start)
-                if tThisFlipGlobal > joystick_DelResp.tStartRefresh + 2.0-frameTolerance:
+                if tThisFlipGlobal > joystick_DelResp.tStartRefresh + 2.02-frameTolerance:
                     # keep track of stop time/frame for later
                     joystick_DelResp.tStop = t  # not accounting for scr refresh
                     joystick_DelResp.frameNStop = frameN  # exact frame index
@@ -1076,7 +1075,7 @@ for thisTrial in trials:
                  # update/draw components on each frame
                   # get time when subject just starts to move joystick
                 if len(joystick_DelResp.x) != 0 and (x!= joystick_DelResp.x[-1] or y!= joystick_DelResp.y[-1]) and move==0:
-                    joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 8.5  # Sofiia 2.10.2020 change time
+                    joystick_RT_start = joystick_DelResp.joystickClock.getTime() - 8.0  # Sofiia 2.10.2020 change time
                     move = 1 
                 # compare the position of joystick with x,y coordinates of correct object each frame
                 if joystick_resp_corr<0 and (correct_object== 'square' and (x_square-0.12)<x-x1<(x_square+0.12) and (y_square-0.12)<y-y1<(y_square+0.12)) or (correct_object== 'triangle' and (x_triangle-0.12)<x-x1<(x_triangle+0.12) and (y_triangle-0.12)<y-y1<(y_triangle+0.12)):
@@ -1089,7 +1088,7 @@ for thisTrial in trials:
                 joystick_DelResp.time.append(joystick_DelResp.joystickClock.getTime())
             
             # *joystick_DelCursor* updates
-            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 9.02-frameTolerance: # Sofiia 2.10.2020 change time   # Sofiia 29.10.2020 avoiding 'ghosts', addindg 2 ms to cursor
+            if joystick_DelCursor.status == NOT_STARTED and tThisFlip >= 8.0-frameTolerance:  # Sofiia 07.11.2020 change time of delay 
                 # keep track of start time/frame for later
                 joystick_DelCursor.frameNStart = frameN  # exact frame index
                 joystick_DelCursor.tStart = t  # local t and not account for scr refresh
@@ -1146,7 +1145,7 @@ for thisTrial in trials:
         if NoMove_x and NoMove_y:
             missed_j = 1
             
-        joystick_RT_corr = joystick_RT_corr-8.5  # calculate RT relative to the start of action phase  # Sofiia 2.10.2020 change - RT relative to the start of go signal
+        joystick_RT_corr = joystick_RT_corr-8.0  # calculate RT relative to the start of action phase  # Sofiia 07.11.2020 change time of delay 
         
         attempts += 1
         if joystick_resp_corr==1:
@@ -1333,7 +1332,7 @@ for thisTrial in trials:
         frameN = -1
         
         # -------Run Routine "question_del"-------
-        while continueRoutine:
+        while continueRoutine and routineTimer.getTime() > 0:
             # get current time
             t = question_delClock.getTime()
             tThisFlip = win.getFutureFlipTime(clock=question_delClock)
@@ -1349,7 +1348,14 @@ for thisTrial in trials:
                 question.tStartRefresh = tThisFlipGlobal  # on global time
                 win.timeOnFlip(question, 'tStartRefresh')  # time at next scr refresh
                 question.setAutoDraw(True)
-            
+            if question.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > question.tStartRefresh + 2.0-frameTolerance:
+                    # keep track of stop time/frame for later
+                    question.tStop = t  # not accounting for scr refresh
+                    question.frameNStop = frameN  # exact frame index
+                    win.timeOnFlip(question, 'tStopRefresh')  # time at next scr refresh
+                    question.setAutoDraw(False)            
             # *answer_button* updates
             if answer_button.status == NOT_STARTED and tThisFlip >= 0-frameTolerance:
                 # keep track of start time/frame for later
@@ -1360,6 +1366,14 @@ for thisTrial in trials:
                 answer_button.status = STARTED
                 # joyButtons checking is just starting
                 win.callOnFlip(answer_button.clock.reset)  # t=0 on next screen flip
+            if answer_button.status == STARTED:
+                # is it time to stop? (based on global clock, using actual start)
+                if tThisFlipGlobal > answer_button.tStartRefresh + 2.0-frameTolerance:
+                    # keep track of stop time/frame for later
+                    answer_button.tStop = t  # not accounting for scr refresh
+                    answer_button.frameNStop = frameN  # exact frame index
+                    win.timeOnFlip(answer_button, 'tStopRefresh')  # time at next scr refresh
+                    answer_button.status = FINISHED
             if answer_button.status == STARTED:
                 answer_button.newButtonState = answer_button.device.getAllButtons()[:]
                 answer_button.pressedButtons = []
@@ -1406,6 +1420,12 @@ for thisTrial in trials:
                 thisComponent.setAutoDraw(False)
         loop_del_diff.addData('question.started', question.tStartRefresh)
         loop_del_diff.addData('question.stopped', question.tStopRefresh)
+        
+        # --------------< Sofiia 06.11.2020 count correct answers on the question
+        if len(theseKeys) > 0 and answer_button.corr:
+            answScore += 1
+        #------------------>
+        
         # check responses
         if answer_button.keys in ['', [], None]:  # No response was made
             answer_button.keys=None
@@ -1419,8 +1439,6 @@ for thisTrial in trials:
         loop_del_diff.addData('answer_button.corr', answer_button.corr)
         if answer_button.keys != None:  # we had a response
             loop_del_diff.addData('answer_button.rt', answer_button.rt)
-        # the Routine "question_del" was not non-slip safe, so reset the non-slip timer
-        routineTimer.reset()
     # completed delayed_d repeats of 'loop_del_diff'
     
     
@@ -1540,16 +1558,18 @@ for thisTrial in trials:
         
         # ------Prepare to start Routine "end_block"-------
         continueRoutine = True
-        # update component parameters for each repeat
-        
+        # update component parameters for each repeat       
         if attempts > 0:
-            textScore= u'score: ' + str(sumScore) +  u' correct ' 
+            textScore= u'score: ' + '\n' + str(sumScore) +  u' correct hits ' 
             textScore += ( "(%.0f" % (sumScore/attempts*100)) + ' %) from ' + str(attempts) + u' trials'
             if attempts == missed:
                 textScore += '\n' + u'reaction time: --';
             else:
                 textScore += '\n' + u'reaction time: ' + ( "%.0f" %  (sumRt/(attempts-missed)*1000) ) + ' ms';
             textScore += '\n'+u'missed trials: ' +  str(missed); 
+            if delayed_d ==1:     # ---------<  Sofiia 06.11.2020, adding the sum of correct answers
+                textScore += '\n'  +  str(answScore) +  u' correct answers on the question ' 
+                textScore += ( "(%.0f" % (answScore/attempts*100)) + ' %) '  # --->
         else:
             textScore = '';
         text_score.setText(textScore)
@@ -1651,6 +1671,7 @@ for thisTrial in trials:
         sumScore = 0
         missed = 0
         sumRt = 0
+        answScore = 0 # Sofiia 06.11.2020
         loopEnd_block.addData('text_end_block.started', text_end_block.tStartRefresh)
         loopEnd_block.addData('text_end_block.stopped', text_end_block.tStopRefresh)
         loopEnd_block.addData('text_score.started', text_score.tStartRefresh)
