@@ -18,18 +18,20 @@ dataCell = [dataTable.Properties.VariableNames;dataCell]; % with names of column
 
 % choose only important columns with the nessesary info
 if long == 0
-    data = [dataCell(:,2) dataCell(:,9) dataCell(:,10) dataCell(:,68) dataCell(:,69) dataCell(:,70) dataCell(:,71)...
-        dataCell(:,72) dataCell(:,116) dataCell(:,117) dataCell(:,118) dataCell(:,119) dataCell(:,120) dataCell(:,121) dataCell(:,142)]; 
+    data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142]); 
 else
-    data = [dataCell(:,2) dataCell(:,9) dataCell(:,10) dataCell(:,68) dataCell(:,69) dataCell(:,70) dataCell(:,71)...
-        dataCell(:,72) dataCell(:,116) dataCell(:,117) dataCell(:,118) dataCell(:,119) dataCell(:,120) dataCell(:,121) dataCell(:,142)...
-        dataCell(:,66) dataCell(:,67) dataCell(:,73) dataCell(:,74) dataCell(:,75) dataCell(:,114) dataCell(:,115)...
-        dataCell(:,122) dataCell(:,123) dataCell(:,124) dataCell(:,3) dataCell(:,4) dataCell(:,5) dataCell(:,6) dataCell(:,8)]; % with x,y coordinates and time of joystick moves
+    data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142 66:67 73:75 114:115 122:124 3:6 8]); % with x,y coordinates and time of joystick moves
 end
 
 % save names of columns separately and delete from data
 VarNames = data(1,:);
 data(1,:) = [];
+
+% calculate true delay (column 14,delay stopped - column 13,delay started)
+data(:,13) = cellfun(@minus,data(:,14),data(:,13),'UniformOutput',false);
+data(:,14) = [];
+VarNames{13} = 'delay';
+VarNames(14) = [];
 
 % replace names of conditions by number: 0 - immed_s, 1 - immed_d, 2 - del_s, 3 - del_d
 immed_samei = strcmpi(data(:,1),'immed_s');
@@ -85,15 +87,10 @@ ivalid(:,2) = ~isnan(dataMat(:,9));  % for delayed trials
 ivalidAll = any(ivalid,2); % join indexes of both types of trials
 
 % join RT, correct and missed responses for immed and delayed trials in one column
-dataMat(ivalid(:,2),4) = dataMat(ivalid(:,2),9); % correct
-dataMat(ivalid(:,2),5) = dataMat(ivalid(:,2),10); % RT of correct
-dataMat(ivalid(:,2),6) = dataMat(ivalid(:,2),11); % RT of start of movement
-dataMat(ivalid(:,2),7) = dataMat(ivalid(:,2),12); % missed trials
+dataMat(ivalid(:,2),4:7) = dataMat(ivalid(:,2),9:12); % correct;RT of correct;RT of start of movement;missed trials
 
 if long == 1   % join x,y coordinates and time points for immed and delayed trials in one column
-    coord_data(ivalid(:,2),1) = coord_data(ivalid(:,2),4); % x
-    coord_data(ivalid(:,2),2) = coord_data(ivalid(:,2),5); % y
-    coord_data(ivalid(:,2),3) = coord_data(ivalid(:,2),6); % time points
+    coord_data(ivalid(:,2),1:3) = coord_data(ivalid(:,2),4:6); % x; y; time points
     
     % take only valid values for the entire cell array (without NaN rows)
     coord_data = coord_data(ivalidAll,:);
