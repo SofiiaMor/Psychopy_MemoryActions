@@ -10,7 +10,12 @@ if ~exist('long', 'var') || isempty(long)
 end
 
 % first read table
-dataTable = readtable(filename);
+dataTable = readtable(filename, 'Delimiter', ',', 'ReadVariableNames', true);
+
+% for file as09102020 and others in which 15 buttons of joystick
+dataTable(end,:) = [];
+dataTable = removevars(dataTable, {'joystick_ImmedResp_button_10','joystick_ImmedResp_button_11','joystick_ImmedResp_button_12','joystick_ImmedResp_button_13','joystick_ImmedResp_button_14','joystick_ImmedResp_button_15'});
+dataTable = removevars(dataTable, {'joystick_DelResp_button_10','joystick_DelResp_button_11','joystick_DelResp_button_12','joystick_DelResp_button_13','joystick_DelResp_button_14','joystick_DelResp_button_15'});
 
 % then convert to cell array
 dataCell = table2cell(dataTable);
