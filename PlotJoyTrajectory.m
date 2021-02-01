@@ -2,11 +2,12 @@ function PlotJoyTrajectory(matFilename)
 %%%% function for ploting joystick trajectory of one subject in the test MemoryActions
 %%%% per each block separately (without training blocks)
 %%%%
-%%%%     matFilename - the name of mat file with behavioral data, 
+%%%%     matFilename - the name of mat file with behavioral data,
 %%%%     obtained after calling function MemoryActionsImport (without path)
 
 % the folder where behav data were saved
 dir = 'D:\eeg\motol\PsychoPydata\MemoryActions\';
+% dir = 'E:\работа\MemoryActions\data\';
 fullfilename = fullfile(dir, matFilename);
 % load .mat file with behavioural data
 load(fullfilename)
@@ -15,6 +16,7 @@ load(fullfilename)
 newFolder = split(matFilename,'.');
 newFolder = newFolder{1}; % name of test and patient
 eval(['!mkdir D:\eeg\motol\PsychoPydata\MemoryActions\' newFolder]); % create folder
+% eval(['!mkdir E:\работа\MemoryActions\data\' newFolder]); % create folder
 path = [dir newFolder]; % path for saving images
 
 % get the general behavioral data (matrix separately)
@@ -82,21 +84,34 @@ for blocki = 1:general_data(end,3)
             response = 'missed';
         elseif general_data(triali,4) == 1
             response = 'correct';
-            trajColor = 'g';  % green trajectory if correct
+            trajColor = 'parula';
         elseif general_data(triali,4) == -1
             response = 'incorrect';
-            trajColor = 'r'; % red trajectory if incorrect
+            trajColor = 'hot';
         end
+        
+        % distance between square and triangle
+        SqTr_distance = sqrt((x_corr-x_uncorr_obj)^2+(y_corr-y_uncorr_obj)^2);
         
         % ploting
         subploti = subploti + 1;
-        subplot(5,Ntrials/5,subploti), hold on
-        plot(x, y, trajColor, 'LineWidth', 1.5) % trajectory of joystick
+        ax = subplot(5,Ntrials/5,subploti); hold on
+        plot(0,0, 'k+', 'LineWidth', 1, 'MarkerSize', 6) % cross in the middle
+        plot(x_corr, y_corr, ['k' obj1],'LineWidth', 1,'MarkerSize', 5) % correct object
+        plot(x_uncorr_obj, y_uncorr_obj, ['k' obj2], 'LineWidth', 1,'MarkerSize', 5) % the second object
+        
+        % area around the objects for correct response according to the PsychoPy code version from 10.12.2020
+        patch([x_corr-0.105 x_corr-0.105 x_corr+0.105 x_corr+0.105],[y_corr-0.105 y_corr+0.105 y_corr+0.105 y_corr-0.105],'g', 'FaceAlpha',.1, 'EdgeColor', 'g')
+        patch([x_uncorr_obj-0.105 x_uncorr_obj-0.105 x_uncorr_obj+0.105 x_uncorr_obj+0.105],[y_uncorr_obj-0.105 y_uncorr_obj+0.105 y_uncorr_obj+0.105 y_uncorr_obj-0.105],'r', 'FaceAlpha',.1, 'EdgeColor', 'r')
+        
+        % area around the objects for correct response according to the new PsychoPy code version
+%         patch([x_corr-SqTr_distance/4 x_corr-SqTr_distance/4 x_corr+SqTr_distance/4 x_corr+SqTr_distance/4],[y_corr-SqTr_distance/4 y_corr+SqTr_distance/4 y_corr+SqTr_distance/4 y_corr-SqTr_distance/4],'g', 'FaceAlpha',.1, 'EdgeColor', 'g')
+%         patch([x_uncorr_obj-SqTr_distance/4 x_uncorr_obj-SqTr_distance/4 x_uncorr_obj+SqTr_distance/4 x_uncorr_obj+SqTr_distance/4],[y_uncorr_obj-SqTr_distance/4 y_uncorr_obj+SqTr_distance/4 y_uncorr_obj+SqTr_distance/4 y_uncorr_obj-SqTr_distance/4],'r', 'FaceAlpha',.1, 'EdgeColor', 'r')
+%         
+        scatter(x, y, 5, 1:length(x), 'filled'); % trajectory of joystick
+        colormap(ax,trajColor)
         set(gca, 'xlim', [-0.5 0.5], 'ylim', [-0.5 0.5], 'xtick', [], 'ytick', []), box on
         axis square
-        plot(0,0, 'k+', 'LineWidth', 1, 'MarkerSize', 7) % cross in the middle
-        plot(x_corr, y_corr, ['m' obj1],'LineWidth', 1,'MarkerSize', 7) % correct object - magenta
-        plot(x_uncorr_obj, y_uncorr_obj, ['k' obj2], 'LineWidth', 1,'MarkerSize', 7) % the second object - black
         title([num2str(triali) ', ' condition ', ' response])
     end
     
