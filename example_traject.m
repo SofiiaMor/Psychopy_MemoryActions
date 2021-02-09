@@ -1,7 +1,7 @@
 % example of trajectory for one specific trial
 
 % number of trial
-triali = 65;
+triali = 32;
 
 % get the general behavioral data (matrix separately)
 general_data = MemoryActions.Gdata;
@@ -97,6 +97,9 @@ corr_zoneX = [x_corr-SqTr_distance/4 x_corr-SqTr_distance/4 x_corr+SqTr_distance
 corr_zoneY = [y_corr-SqTr_distance/4 y_corr+SqTr_distance/4 y_corr+SqTr_distance/4 y_corr-SqTr_distance/4];
 
 [x_inter,y_inter] = intersections(x,y,corr_zoneX,corr_zoneY);
+
+indtime = dsearchn(x, x_inter);
+rt = t(min(indtime));
 hold on
 plot(x_inter, y_inter, 'ko', 'LineWidth', 1.5, 'LineStyle', 'None')
 

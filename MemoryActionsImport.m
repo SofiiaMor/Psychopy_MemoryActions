@@ -13,7 +13,7 @@ end
 dataTable = readtable(filename, 'Delimiter', ',', 'ReadVariableNames', true);
 
 % for file as09102020 and others in which 15 buttons of joystick
-dataTable(end,:) = [];
+% dataTable(end,:) = [];
 dataTable = removevars(dataTable, {'joystick_ImmedResp_button_10','joystick_ImmedResp_button_11','joystick_ImmedResp_button_12','joystick_ImmedResp_button_13','joystick_ImmedResp_button_14','joystick_ImmedResp_button_15'});
 dataTable = removevars(dataTable, {'joystick_DelResp_button_10','joystick_DelResp_button_11','joystick_DelResp_button_12','joystick_DelResp_button_13','joystick_DelResp_button_14','joystick_DelResp_button_15'});
 
@@ -23,9 +23,11 @@ dataCell = [dataTable.Properties.VariableNames;dataCell]; % with names of column
 
 % choose only important columns with the nessesary info
 if long == 0
-    data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142]); 
+%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142]); 
+    data = dataCell(:,[2 9 10 68:72 123:126 113:114 128 103]); % from new version Psychopy 01.02.2021
 else
-    data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142 66:67 73:75 114:115 122:124 3:6 8]); % with x,y coordinates and time of joystick moves
+%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 121 142 66:67 73:75 114:115 122:124 3:6 8]); % with x,y coordinates and time of joystick moves
+    data = dataCell(:,[2 9 10 68:72 123:126 113:114 128 103 66:67 73:75 121:122 129:131 3:6 8]); % from new version Psychopy 01.02.2021
 end
 
 % save names of columns separately and delete from data
