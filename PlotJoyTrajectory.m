@@ -3,11 +3,12 @@ function PlotJoyTrajectory(matFilename)
 %%%% per each block separately (without training blocks)
 %%%%
 %%%%     matFilename - the name of mat file with behavioral data,
-%%%%     obtained after calling function MemoryActionsImport (without path)
+%%%%     obtained after calling function MemoryActionsImport (without path), 
+%%%%     e.g. PlotJoyTrajectory('ma201211_MemoryActions.mat')
 
 % the folder where behav data were saved
 dir = 'D:\eeg\motol\PsychoPydata\MemoryActions\';
-% dir = 'E:\работа\MemoryActions\data\';
+
 fullfilename = fullfile(dir, matFilename);
 % load .mat file with behavioural data
 load(fullfilename)
@@ -100,14 +101,10 @@ for blocki = 1:general_data(end,3)
         plot(x_corr, y_corr, ['k' obj1],'LineWidth', 1,'MarkerSize', 5) % correct object
         plot(x_uncorr_obj, y_uncorr_obj, ['k' obj2], 'LineWidth', 1,'MarkerSize', 5) % the second object
         
-        % area around the objects for correct response according to the PsychoPy code version from 10.12.2020
+        % area around the objects for correct response according to the PsychoPy code 
         patch([x_corr-0.105 x_corr-0.105 x_corr+0.105 x_corr+0.105],[y_corr-0.105 y_corr+0.105 y_corr+0.105 y_corr-0.105],'g', 'FaceAlpha',.1, 'EdgeColor', 'g')
         patch([x_uncorr_obj-0.105 x_uncorr_obj-0.105 x_uncorr_obj+0.105 x_uncorr_obj+0.105],[y_uncorr_obj-0.105 y_uncorr_obj+0.105 y_uncorr_obj+0.105 y_uncorr_obj-0.105],'r', 'FaceAlpha',.1, 'EdgeColor', 'r')
-        
-        % area around the objects for correct response according to the new PsychoPy code version
-%         patch([x_corr-SqTr_distance/4 x_corr-SqTr_distance/4 x_corr+SqTr_distance/4 x_corr+SqTr_distance/4],[y_corr-SqTr_distance/4 y_corr+SqTr_distance/4 y_corr+SqTr_distance/4 y_corr-SqTr_distance/4],'g', 'FaceAlpha',.1, 'EdgeColor', 'g')
-%         patch([x_uncorr_obj-SqTr_distance/4 x_uncorr_obj-SqTr_distance/4 x_uncorr_obj+SqTr_distance/4 x_uncorr_obj+SqTr_distance/4],[y_uncorr_obj-SqTr_distance/4 y_uncorr_obj+SqTr_distance/4 y_uncorr_obj+SqTr_distance/4 y_uncorr_obj-SqTr_distance/4],'r', 'FaceAlpha',.1, 'EdgeColor', 'r')
-%         
+              
         scatter(x, y, 5, 1:length(x), 'filled'); % trajectory of joystick
         colormap(ax,trajColor)
         set(gca, 'xlim', [-0.5 0.5], 'ylim', [-0.5 0.5], 'xtick', [], 'ytick', []), box on

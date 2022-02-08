@@ -1,9 +1,10 @@
 function MemoryActionsImport(filename, long)
 % only filename without a path
+% e.g. MemoryActionsImport('js211006_MemoryActions_2021_Oct_06_1557.csv', 0)
 % if long=0, in output saves the general data with RT, corr/missed etc. in xls file
 % if long=1 saves .mat file with a structure with all data incl. coordinates of joystick for every frame
 
-cd 'd:\psychopy\MemoryActions\data\' % set directory where to find the files
+cd 'd:\eeg\motol\PsychoPydata\MemoryActions\' % set directory where to find the files
 
 if ~exist('long', 'var') || isempty(long)
     long = 1;
@@ -12,7 +13,7 @@ end
 % first read table
 dataTable = readtable(filename, 'Delimiter', ',', 'ReadVariableNames', true);
 
-% for file as09102020 and others in which 15 buttons of joystick
+% for file as09102020 and others in which 15 buttons of joystick (to remove last 6 buttons)
 dataTable(end,:) = [];
 dataTable = removevars(dataTable, {'joystick_ImmedResp_button_10','joystick_ImmedResp_button_11','joystick_ImmedResp_button_12','joystick_ImmedResp_button_13','joystick_ImmedResp_button_14','joystick_ImmedResp_button_15'});
 dataTable = removevars(dataTable, {'joystick_DelResp_button_10','joystick_DelResp_button_11','joystick_DelResp_button_12','joystick_DelResp_button_13','joystick_DelResp_button_14','joystick_DelResp_button_15'});

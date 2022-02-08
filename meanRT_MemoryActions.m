@@ -1,4 +1,7 @@
 % average RT and accuracy in MemoryActions test
+% first, load data to matlab
+% e.g. load('D:\eeg\motol\PsychoPydata\MemoryActions\ma201211_MemoryActions.mat')
+
 % get the general behavioral data (matrix separately)
 beh_data = MemoryActions.Gdata;
 

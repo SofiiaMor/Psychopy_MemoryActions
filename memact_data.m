@@ -7,7 +7,7 @@ if ~exist('RT_cor','var')  || isempty(RT_cor)
     RT_corr = 0; % default: RT of start moving joystick, if 1 - RT of hiting the correct object 
 end
 
-dir = 'e:\работа\MemoryActions\data\';
+dir = 'd:\eeg\motol\PsychoPydata\MemoryActions\';
 % load mat file with all behav data
 load([dir pacientid '_MemoryActions.mat']);
 
