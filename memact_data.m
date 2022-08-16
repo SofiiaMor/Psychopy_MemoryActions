@@ -1,22 +1,27 @@
 function [memact] = memact_data(pacientid,RT_corr, U1,U2,tabs,eegfile)
-% memact_data creates and returns the structure with events in MemoryActions test 
-% pacientid - id pacienta, napriklad p85, podle pojmenovani vystupni tabulky
-% U1 a U2 vystup z udalosti2() - casy synchropulsu k podnedu a odpovedi
+%%%% creates and returns the behavioral data structure of the psychopy 
+%%%% that contains all trials and their timestamps in MemoryActions test 
+% pacientid - id pacienta, e.g. p85
+% RT_corr - if to use behavioral RT of reaching the correct object (=1) or RT of start moving joystick (0)
+% U1 and U2 - data from the function udalosti2() - timestamps of sync pulses of stimuli and responses (U2 = RT_corr)
+% tabs - tabs value from data from Motol, possibly truncated with datatrim()
+% eegfile - the original file name with the EEG data
 
 if ~exist('RT_cor','var')  || isempty(RT_cor)
     RT_corr = 0; % default: RT of start moving joystick, if 1 - RT of hiting the correct object 
 end
 
-dir = 'd:\eeg\motol\PsychoPydata\MemoryActions\';
+%dir = 'd:\eeg\motol\PsychoPydata\MemoryActions\';
+dir = 'd:\eeg\motol\PsychoPydata\MemoryActions\ma201211 memoryactions data\';
 % load mat file with all behav data
 load([dir pacientid '_MemoryActions.mat']);
 
-% get only table with RT, accuracy and so on, without coordinates of joystick 
+% get only table with RT, accuracy and timing, without coordinates of joystick 
 dataS = MemoryActions.Gdata;
 
-% rearrange data according to Kamil's format
+% rearrange data according to Kamil's format (like in aedist_data.m)
 data(:,1) = dataS(:,7);  % instead of soubor - delay
-data(:,2) = dataS(:,9); % answer_button (to the question in diff conditions)
+data(:,2) = dataS(:,10); % answer_button (to the question in diff conditions)
 data(:,3) = dataS(:,4); % spravne = accuracy
 if RT_corr == 0
     data(:,4) = dataS(:,6); % rt of start
@@ -26,16 +31,17 @@ end
 data(:,5) = dataS(:,3); % opakovani = block
 data(:,6) = dataS(:,2); % feedback = zpetnavazba
 data(:,7) = dataS(:,1); % condition = kategorie
+data(:,8) = dataS(:,8); % t_encod_del = exact duration of encoding phase in delayed trials
 
 if size(U1,1) ~= size(data,1) || size(U2,1) ~= size(data,1)
     disp(['data:' num2str(size(data,1)) ' U1:' num2str(size(U1,1)) ' U2:' num2str(size(U2,1))]);
     error('different lengths of data and events, cannot be processed!');    
 end
 
-data(:,8)=U1(:,2);
-data(:,9)=U2(:,2);
+data(:,9)=U1(:,2); % timestamp of sync pulses of stimuli 
+data(:,10)=U2(:,2); % timestamp of sync pulses of responses
 
-%nazvy sloupcu tabulky
+% column names in the table
 sloupce = {};
 sloupce.delay=1;   % instead of soubor - time of delay in delayed conditions
 sloupce.klavesa=2; % answer_button response (to the question in diff conditions)
@@ -44,10 +50,11 @@ sloupce.rt = 4;
 sloupce.opakovani=5;
 sloupce.zpetnavazba=6;
 sloupce.kategorie=7;
-sloupce.ts_podnet=8;
-sloupce.ts_odpoved=9;
+sloupce.t_encod_del=8;
+sloupce.ts_podnet=9;
+sloupce.ts_odpoved=10;
 
-%retezcove hodnoty kodu klavesa a faktoru testu
+% text code for button response and test conditions
 klavesa = cell(3,2);
 klavesa(1,:)={'incorrect' 0};
 klavesa(2,:)={'correct' 1};
@@ -61,13 +68,12 @@ podminka(4,:)={'del_diff' 3};
 
 memact = struct('data',data,'sloupce',sloupce);
 memact.strings.klavesa = klavesa;
-memact.strings.podminka = podminka; %kategorie, aby nazev byl stejny jako u PPA
+memact.strings.podminka = podminka; 
 
-%timestampy zacatku a konce dat z testu
+% timestamps of the start and end of the data from the test
 memact.interval = [tabs(1) tabs(end)];
 disp(['MemActions data od ' datestr(tabs(1),'dd-mmm-yyyy HH:MM:SS.FFF') ' do ' datestr(tabs(end),'dd-mmm-yyyy HH:MM:SS.FFF')]);
 
 memact.eegfile = eegfile;
-memact.pacientid = pacientid; %6.6.2018 - proc jsem to tam probuh nemel driv?
+memact.pacientid = pacientid; 
 end
-
