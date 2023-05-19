@@ -25,14 +25,15 @@ dataCell = [dataTable.Properties.VariableNames;dataCell]; % with names of column
 % choose only important columns with the nessesary info
 if long == 0
 %     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142]); % only for patient ma201211
-    data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103]); % for new patients, from new version Psychopy 01.02.2021, columns: 
+    data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103 104]); % for new patients, from new version Psychopy 01.02.2021, columns: 
  % 'condition','feedback','block','joystick_resp_corr_immed','joystick_RT_corr_immed','joystick_RT_start_immed','missed_immed','ITI_immed',
  % 'joystick_resp_corr_del','joystick_RT_corr_del','joystick_RT_start_del','missed_del','text_cross_delay_started','text_cross_delay_stopped',
- % 'image_del_started','image_del_stopped', 'ITI_del', 'answer_button_corr'
+ % 'image_del_started','image_del_stopped', 'ITI_del',
+ % 'answer_button_corr', 'answer_button.rt'
 
 else
 %     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142 66:67 73:75 114:115 122:124 3:6 8]); % only for patient ma201211   
-    data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103 66:67 73:75 121:122 129:131 3:6 8]); % from new version Psychopy 01.02.2021, % with x,y coordinates and time of joystick moves
+    data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103 104 66:67 73:75 121:122 129:131 3:6 8]); % from new version Psychopy 01.02.2021, % with x,y coordinates and time of joystick moves
 end
 
 % save names of columns separately and delete from data
@@ -74,23 +75,23 @@ end
 
 if long == 1    % convert coordinates-chars into numbers
     for ri = 1:size(data,1)
-        data{ri,19} = str2num(data{ri,19})-data{ri,17}; % x_immed - x1_immed (substract the displacement of joystick before the trial)
-        data{ri,20} = str2num(data{ri,20})-data{ri,18}; % y_immed - y1_immed
-        data{ri,21} = str2num(data{ri,21})-data{ri,8} + 0.02; % time points in immed - ITI_immed + 0.02 sec (joystick starts 2 ms before updating cursor)
-        data{ri,24} = str2num(data{ri,24})-data{ri,22}; % x_del - x1_del
-        data{ri,25} = str2num(data{ri,25})-data{ri,23}; % y_del - y1_del
-        data{ri,26} = str2num(data{ri,26})-data{ri,13}-data{ri,14}-data{ri,15} + 0.02; % time points in del - delay - ITI_del - t_encod_del(image encoding) + 0.02 sec
+        data{ri,20} = str2num(data{ri,20})-data{ri,18}; % x_immed - x1_immed (substract the displacement of joystick before the trial)
+        data{ri,21} = str2num(data{ri,21})-data{ri,19}; % y_immed - y1_immed
+        data{ri,22} = str2num(data{ri,22})-data{ri,8} + 0.02; % time points in immed - ITI_immed + 0.02 sec (joystick starts 2 ms before updating cursor)
+        data{ri,25} = str2num(data{ri,25})-data{ri,23}; % x_del - x1_del
+        data{ri,26} = str2num(data{ri,26})-data{ri,24}; % y_del - y1_del
+        data{ri,27} = str2num(data{ri,27})-data{ri,13}-data{ri,14}-data{ri,15} + 0.02; % time points in del - delay - ITI_del - t_encod_del(image encoding) + 0.02 sec
     end
     
     % replace names of correct object by number: 3 - triangle, 4 - square
-    tri = strcmpi(data(:,31),'triangle');
-    data(tri,31) = {3};
-    sqi = strcmpi(data(:,31),'square');
-    data(sqi,31) = {4};
+    tri = strcmpi(data(:,32),'triangle');
+    data(tri,32) = {3};
+    sqi = strcmpi(data(:,32),'square');
+    data(sqi,32) = {4};
     
-    coord_data = [data(:,19:21) data(:,24:31)]; % all coordinates together with correct ones
-    coord_names = [VarNames(19:21) VarNames(24:31)]; % names of columns {'joystick_ImmedResp_x' 'joystick_ImmedResp_y' 'joystick_ImmedResp_time' 'joystick_DelResp_x' 'joystick_DelResp_y' 'joystick_DelResp_time' 'x_square' 'y_square' 'x_triangle' 'y_triangle' 'correct_object'}
-    data = data(:,1:16); % general data {'condition' 'feedback' 'block' 'joystick_resp_corr_immed' 'joystick_RT_corr_immed' 'joystick_RT_start_immed' 'missed_immed' 'ITI_immed' 'joystick_resp_corr_del' 'joystick_RT_corr_del' 'joystick_RT_start_del' 'missed_del' 'delay' 't_encod_del' 'ITI_del' 'answer_button_corr'}
+    coord_data = [data(:,20:22) data(:,25:32)]; % all coordinates together with correct ones
+    coord_names = [VarNames(20:22) VarNames(25:32)]; % names of columns {'joystick_ImmedResp_x' 'joystick_ImmedResp_y' 'joystick_ImmedResp_time' 'joystick_DelResp_x' 'joystick_DelResp_y' 'joystick_DelResp_time' 'x_square' 'y_square' 'x_triangle' 'y_triangle' 'correct_object'}
+    data = data(:,1:17); % general data {'condition' 'feedback' 'block' 'joystick_resp_corr_immed' 'joystick_RT_corr_immed' 'joystick_RT_start_immed' 'missed_immed' 'ITI_immed' 'joystick_resp_corr_del' 'joystick_RT_corr_del' 'joystick_RT_start_del' 'missed_del' 'delay' 't_encod_del' 'ITI_del' 'answer_button_corr'}
 end
 
 % transform into matrix for easier manipulations
@@ -134,35 +135,44 @@ end
 AnswButIm = dataMat(~isnan(dataMat(:,16))& dataMat(:,1)==1,16); % for immed_diff
 AnswButDel = dataMat(~isnan(dataMat(:,16))& dataMat(:,1)==3,16); % for del_diff 
 
+% for column answer_button.rt: take only rows without NaN - different indexes than in ivalid
+AnswButImRT = dataMat(~isnan(dataMat(:,16))& dataMat(:,1)==1,17); % for immed_diff
+AnswButDelRT = dataMat(~isnan(dataMat(:,16))& dataMat(:,1)==3,17); % for del_diff 
+
 % take all valid values for the entire matrix
 dataMat = dataMat(ivalidAll,:); 
 
-% replace last column-answer_button.corr by correct values for immed_diff and del_diff trials
+% replace last two columns - answer_button.corr and answer_button.rt by correct values for immed_diff and del_diff trials
 dataMat(dataMat(:,1)==1,16)=AnswButIm; % immed_diff
 dataMat(dataMat(:,1)==3,16)=AnswButDel; % del_diff
+dataMat(dataMat(:,1)==1,17)=AnswButImRT; % immed_diff rt
+dataMat(dataMat(:,1)==3,17)=AnswButDelRT; % del_diff rt
 
-% join missed and correct in one column (missed - 0, correct - 1, incorrect - -1)
-imissed = logical(dataMat(:,7)); % find indexes of missed trials
-dataMat(imissed,4) = 0;  % in corr column replace missed by 0
+% May 2023: not nesessary anymore: missed trials should be stored separately to be comparable with iEEG package
+% % join missed and correct in one column (missed - 0, correct - 1, incorrect - -1)
+% imissed = logical(dataMat(:,7)); % find indexes of missed trials
+% dataMat(imissed,4) = 0;  % in corr column replace missed by 0
 
 % join ITI_immed and ITI_del in one column
 iITI_im = ~isnan(dataMat(:,8));  % ITI for immediate trials
 dataMat(iITI_im,15) = dataMat(iITI_im,8); % put them in column with del ITI
 
 % now colums with delayed and missed trials can be deleted
-dataMat(:, 7:12) = [];
+dataMat(:, 8:12) = [];
 
 % new names of variables
-newVarNames = [VarNames(1:6) VarNames(13:16)];
+newVarNames = [VarNames(1:7) VarNames(13:17)];
 tempCell =  regexp(newVarNames(4:6), '_', 'split');
 
-% to get rid of word 'immed' in names
-for j = 1:3
+% to get rid of word 'immed' and 'delayed' in names
+for j = 1:length(tempCell)
     name = join(tempCell{j}(2:3), '_');
     newVarNames{3+j} = name{1};
 end
-name9 = regexp(newVarNames(9), '_', 'split');
-newVarNames{9} = name9{1}{1};
+name7 = regexp(newVarNames(7), '_', 'split');
+newVarNames{7} = name7{1}{1};
+name10 = regexp(newVarNames(10), '_', 'split');
+newVarNames{10} = name10{1}{1};
 
 % save data 
 shortName = regexp(filename,'_', 'split'); 
@@ -187,10 +197,10 @@ else  % for long format save structure in .mat file
     condition(4,:)={'del_diff' 3};
     
     % column - correctness
-    resp_corr = cell(3,2);
+    resp_corr = cell(2,2);
     resp_corr(1,:)={'incorrect' -1};
-    resp_corr(2,:)={'missed' 0};
-    resp_corr(3,:)={'correct' 1};
+    %resp_corr(2,:)={'missed' 0};
+    resp_corr(2,:)={'correct' 1};
     
     % structure with headers for 3D matrix of x,y coordinates and time points - coordMat (N frames x 3 (x,y,time) x trials)
     namesCoordData = {};
