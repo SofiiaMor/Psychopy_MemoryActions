@@ -24,7 +24,7 @@ dataCell = [dataTable.Properties.VariableNames;dataCell]; % with names of column
 
 % choose only important columns with the nessesary info
 if long == 0
-%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142]); % only for patient ma201211
+%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142 143]); % only for patient ma201211 (the very first one, for him - the csv file format was a bit different)
     data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103 104]); % for new patients, from new version Psychopy 01.02.2021, columns: 
  % 'condition','feedback','block','joystick_resp_corr_immed','joystick_RT_corr_immed','joystick_RT_start_immed','missed_immed','ITI_immed',
  % 'joystick_resp_corr_del','joystick_RT_corr_del','joystick_RT_start_del','missed_del','text_cross_delay_started','text_cross_delay_stopped',
@@ -32,7 +32,7 @@ if long == 0
  % 'answer_button_corr', 'answer_button.rt'
 
 else
-%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142 66:67 73:75 114:115 122:124 3:6 8]); % only for patient ma201211   
+%     data = dataCell(:,[2 9 10 68:72 116:119 106:107 102:103 121 142 143 66:67 73:75 114:115 122:124 3:6 8]); % only for patient ma201211   
     data = dataCell(:,[2 9 10 68:72 123:126 113:114 109:110 128 103 104 66:67 73:75 121:122 129:131 3:6 8]); % from new version Psychopy 01.02.2021, % with x,y coordinates and time of joystick moves
 end
 
